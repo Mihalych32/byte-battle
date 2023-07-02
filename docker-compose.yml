@@ -13,7 +13,7 @@ services:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     volumes:
-      - ./postgresql.conf:/etc/postgresql.conf
+      - ./config/postgresql.conf:/etc/postgresql.conf
     expose:
       - "5432"
     ports:
@@ -31,7 +31,7 @@ services:
     volumes:
       - .:/byte-battle_backend/migrations
     command:
-      [ "-path", "byte-battle_backend/migrations", "-database",  "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_NAME}?sslmode=${POSTGRES_SSLMODE}", "up" ]
+      [ "-path", "backend/migrations", "-database",  "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_NAME}?sslmode=${POSTGRES_SSLMODE}", "up" ]
   gin:
     build:
       context: .
