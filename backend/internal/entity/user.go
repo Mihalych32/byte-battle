@@ -23,7 +23,19 @@ type RegisterUserBody struct {
 	Password string `json:"password"`
 }
 
+type LoginUserBody struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type CreateUserBody struct {
+	Username     string
+	Email        string
+	EncryptedPwd string
+}
+
+type CheckUserCredentialsBody struct {
 	Username     string
 	Email        string
 	EncryptedPwd string

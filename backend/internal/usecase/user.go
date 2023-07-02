@@ -28,3 +28,17 @@ func (u *UserUsecase) RegisterUser(body *entity.RegisterUserBody) (err error) {
 	_, err = u.repo.CreateUser(createUserBody)
 	return
 }
+
+func (u *UserUsecase) LoginUser(body *entity.LoginUserBody) (err error) {
+	h := sha256.New()
+	h.Write([]byte(body.Password))
+	encryptedPwd := hex.EncodeToString(h.Sum(nil))
+
+	checkUserCredentialsBody := &entity.CheckUserCredentialsBody{
+		Username:     body.Username,
+		Email:        body.Email,
+		EncryptedPwd: encryptedPwd,
+	}
+	_, err = u.repo.CheckUserCredentials(checkUserCredentialsBody)
+	return
+}

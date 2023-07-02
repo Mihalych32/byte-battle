@@ -14,6 +14,7 @@ func StartNewServer(router *gin.Engine, userHandler *UserHandler, port string) {
 			c.String(200, "pong")
 		})
 		api.POST("/register/", userHandler.RegisterUser)
+		api.POST("/login/", userHandler.LoginUser)
 	}
 
 	router.Run(port)
