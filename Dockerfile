@@ -5,10 +5,10 @@ RUN apk update && apk upgrade && \
 
 WORKDIR /app
 
-COPY byte-battle_backend/go.mod byte-battle_backend/go.sum ./
+COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
-COPY ./byte-battle_backend .
+COPY ./backend .
 RUN go build -v cmd/apiserver/main.go
 
 CMD ["./main"]
