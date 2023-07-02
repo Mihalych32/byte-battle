@@ -15,14 +15,34 @@ type Claims struct {
 	role       int8
 }
 
+// Makes a JWT with username, email and role provided in the payload.
+func GenerateJWT(username string, email string, role int8) (string, error) {
+
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+
+	claims["authorized"] = true
+	claims["username"] = username
+	claims["email"] = email
+	claims["role"] = role
+
+	secretKey := os.Getenv("JWT_KEY")
+	if secretKey == "" {
+		loggers.VariableNotFound("JWT_KEY")
+		return "", nil
+	}
+
+	tokenString, err := token.SignedString([]byte(secretKey))
+
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+}
+
+// Verify the JWT and extract claims.
 func VerifyJWT(tokenString string) (*Claims, error) {
-
-	/**
-
-	This function verifies the JWT and extracts claims from it.
-
-	*/
-
 	claims := jwt.MapClaims{}
 
 	secretKey := os.Getenv("JWT_KEY")
@@ -31,8 +51,6 @@ func VerifyJWT(tokenString string) (*Claims, error) {
 		return nil, fmt.Errorf("Could not find the JWT_KEY")
 	}
 
-	// Parse the JWT
-
 	_, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})
@@ -40,8 +58,6 @@ func VerifyJWT(tokenString string) (*Claims, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Could not parse the JWT")
 	}
-
-	// Assert the provided variable's types
 
 	authorized, ok := claims["authorized"].(bool)
 	if !ok {
@@ -55,8 +71,6 @@ func VerifyJWT(tokenString string) (*Claims, error) {
 	if !ok {
 		return nil, fmt.Errorf("EMAIL claim did not pass the type assertion")
 	}
-
-	// Convert ROLE claim into int8
 
 	extractedRole, ok := claims["role"].(int)
 	var role int8

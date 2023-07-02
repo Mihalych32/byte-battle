@@ -1,8 +1,9 @@
 package main
 
 import (
-	"byte-battle_backend/internal/app/apiserver"
-	"byte-battle_backend/pkg/loggers"
+	"byte-battle_backend/config"
+	"byte-battle_backend/internal/app"
+	"log"
 
 	"github.com/joho/godotenv"
 )
@@ -10,13 +11,12 @@ import (
 func main() {
 	err := godotenv.Load("../.env")
 	if err != nil {
-		loggers.LoadEnvFailure()
+		log.Fatal("Could not load .env file")
 	}
 
-	config := apiserver.NewConfig()
-
-	s := apiserver.New(config)
-	if err := s.Start(); err != nil {
-		loggers.StartServerFailure(err)
+	cfg, err := config.NewConfig()
+	if err != nil {
+		log.Fatalf("Config err: %s", err)
 	}
+	app.Run(cfg)
 }
