@@ -3,6 +3,8 @@ package app
 import (
 	"byte-battle_backend/config"
 	"byte-battle_backend/internal/handler"
+	"byte-battle_backend/internal/repo"
+	"byte-battle_backend/internal/usecase"
 	"byte-battle_backend/pkg/postgres"
 	"fmt"
 	"log"
@@ -18,7 +20,10 @@ func Run(cfg *config.Config) {
 		log.Fatalf(err.Error())
 	}
 
-	fmt.Println(pg)
+	userRepo := repo.NewUserRepo(pg)
+	userUsecase := usecase.NewUserUsecase(userRepo)
+	userHandler := handler.NewUserHandler(userUsecase)
+
 	router := gin.New()
 
 	runport := os.Getenv("PUBLIC_BACKEND_PORT")
@@ -27,5 +32,5 @@ func Run(cfg *config.Config) {
 		return
 	}
 	runport = ":" + runport
-	handler.StartNewServer(router, runport)
+	handler.StartNewServer(router, userHandler, runport)
 }

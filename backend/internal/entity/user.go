@@ -16,3 +16,15 @@ type User struct {
 	Role         int8
 	EncryptedPwd string
 }
+
+type RegisterUserBody struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type CreateUserBody struct {
+	Username     string
+	Email        string
+	EncryptedPwd string
+}

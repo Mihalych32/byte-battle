@@ -1,4 +1,4 @@
-package model
+package entity
 
 type Profile struct {
 	ID               int
